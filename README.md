@@ -1,6 +1,6 @@
 # Lumora — hire the people who *direct* the machines
 
-![CI](https://github.com/<your-username>/<your-repo>/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/Yashgurav002/lumora/actions/workflows/ci.yml/badge.svg)
 
 An AI-native creative marketplace. Brands discover AI filmmakers, animators and designers by the tools they master and the workflows they can prove, write structured briefs with AI help, and run each engagement through to delivery.
 
