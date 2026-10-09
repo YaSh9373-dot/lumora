@@ -1,6 +1,6 @@
 import type { CommercialTerms, Creator, PortfolioPiece, Workflow, WorkflowStep } from "@/lib/types";
 
-// All people below are fictional.
+// All people below are fictional. Media in /public/media are free Mixkit stock clips used as placeholders.
 
 type StepTuple = [title: string, toolId: string | undefined, detail: string];
 
@@ -76,6 +76,8 @@ export const CREATORS: Creator[] = [
     portfolio: [
       piece({
         id: "aarav-1",
+        mediaUrl: "/media/monsoon-riders.mp4",
+        coverUrl: "/media/monsoon-riders.jpg",
         title: "Monsoon Riders",
         contentType: "video",
         aspectRatio: "21:9",
@@ -102,6 +104,8 @@ export const CREATORS: Creator[] = [
       }),
       piece({
         id: "aarav-2",
+        mediaUrl: "/media/neon-dhol.mp4",
+        coverUrl: "/media/neon-dhol.jpg",
         title: "Neon Dhol",
         contentType: "video",
         aspectRatio: "9:16",
@@ -128,6 +132,8 @@ export const CREATORS: Creator[] = [
       }),
       piece({
         id: "aarav-3",
+        mediaUrl: "/media/last-lighthouse.mp4",
+        coverUrl: "/media/last-lighthouse.jpg",
         title: "The Last Lighthouse",
         contentType: "video",
         aspectRatio: "16:9",
@@ -231,6 +237,8 @@ export const CREATORS: Creator[] = [
     portfolio: [
       piece({
         id: "zoya-1",
+        mediaUrl: "/media/glow-serum.mp4",
+        coverUrl: "/media/glow-serum.jpg",
         title: "Glow Serum Drop",
         contentType: "video",
         aspectRatio: "9:16",
@@ -747,6 +755,8 @@ export const CREATORS: Creator[] = [
     portfolio: [
       piece({
         id: "omar-1",
+        mediaUrl: "/media/dune-pavilion.mp4",
+        coverUrl: "/media/dune-pavilion.jpg",
         title: "Dune Pavilion",
         contentType: "video",
         aspectRatio: "21:9",
@@ -825,6 +835,8 @@ export const CREATORS: Creator[] = [
       }),
       piece({
         id: "omar-5",
+        mediaUrl: "/media/headphone-levitation.mp4",
+        coverUrl: "/media/headphone-levitation.jpg",
         title: "Headphone Levitation",
         contentType: "video",
         aspectRatio: "16:9",
@@ -879,6 +891,8 @@ export const CREATORS: Creator[] = [
     portfolio: [
       piece({
         id: "sofia-1",
+        mediaUrl: "/media/glass-garden.mp4",
+        coverUrl: "/media/glass-garden.jpg",
         title: "Glass Garden",
         contentType: "video",
         aspectRatio: "16:9",
@@ -904,6 +918,8 @@ export const CREATORS: Creator[] = [
       }),
       piece({
         id: "sofia-2",
+        mediaUrl: "/media/lunar-tide.mp4",
+        coverUrl: "/media/lunar-tide.jpg",
         title: "Lunar Tide (Music Video)",
         contentType: "video",
         aspectRatio: "9:16",
@@ -980,6 +996,8 @@ export const CREATORS: Creator[] = [
     portfolio: [
       piece({
         id: "kenji-1",
+        mediaUrl: "/media/mecha-courier.mp4",
+        coverUrl: "/media/mecha-courier.jpg",
         title: "Mecha Courier",
         contentType: "animation",
         aspectRatio: "16:9",
@@ -1182,6 +1200,8 @@ export const CREATORS: Creator[] = [
     portfolio: [
       piece({
         id: "noah-1",
+        mediaUrl: "/media/rivers-remember.mp4",
+        coverUrl: "/media/rivers-remember.jpg",
         title: "Rivers Remember",
         contentType: "video",
         aspectRatio: "16:9",

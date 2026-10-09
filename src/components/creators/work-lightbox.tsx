@@ -40,7 +40,17 @@ function Media({ piece }: { piece: PortfolioPiece }) {
     );
   }
   if (piece.mediaUrl?.startsWith("/media/")) {
-    return <video className="absolute inset-0 h-full w-full object-contain" src={piece.mediaUrl} controls playsInline poster={piece.coverUrl} />;
+    return <video
+        key={piece.mediaUrl}
+        className="absolute inset-0 h-full w-full object-contain"
+        src={piece.mediaUrl}
+        controls
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster={piece.coverUrl}
+      />;
   }
   return (
     <AuroraCover seed={piece.id} palette={piece.palette} coverUrl={piece.coverUrl} contentType={piece.contentType} durationSec={piece.durationSec} title={piece.title} />

@@ -55,6 +55,7 @@ npm run dev                  # http://localhost:3000
 ## Architecture
 
 - **`src/lib/`** holds all business logic as pure, framework-free modules: `filters`, `matching`, `verification`, `completeness`, `engagement`, `fallback-brief`, `schemas`, `cover`, `format`. UI components stay thin and import from here.
+- **Media:** 10 pieces use short muted stock clips from Mixkit (free license) in `public/media` as placeholders for AI-made work; they play on hover and in the lightbox. The rest use procedural `AuroraCover` art. See [`public/media/CREDITS.md`](public/media/CREDITS.md).
 - **`src/data/`** holds static, typed seed data: 22 tools, 10 fictional creators with 45 portfolio pieces, and 2 sample briefs.
 - **`src/lib/store.ts`** is a Zustand store persisted to localStorage for briefs, engagements, shortlist, user profile and role. It hydrates after mount, so server and client renders match.
 - **`/api/brief-builder`** validates input with Zod, calls Gemini with an 8s timeout and a JSON response schema, then sanitizes and validates the output. On any failure it falls back to the deterministic generator. It has a soft per-IP rate limit, and the key never reaches the client.

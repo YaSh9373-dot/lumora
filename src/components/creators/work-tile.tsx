@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { AudioLines, Box, Clapperboard, Film, Image as ImageIcon, Shapes, Workflow } from "lucide-react";
 import { AuroraCover } from "@/components/effects/aurora-cover";
 import type { ContentType, Creator, PortfolioPiece } from "@/lib/types";
@@ -32,10 +33,16 @@ interface Props {
 /** Cosmos-style masonry tile: image first, metadata revealed on hover. */
 export function WorkTile({ piece, creator, onOpen }: Props) {
   const Icon = CONTENT_ICONS[piece.contentType];
+  const [hovered, setHovered] = useState(false);
+  const localVideo = piece.mediaUrl?.startsWith("/media/") ? piece.mediaUrl : undefined;
   return (
     <button
       type="button"
       onClick={onOpen}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
       aria-label={`Open ${piece.title}${creator ? ` by ${creator.name}` : ""}`}
       className={`group relative block w-full overflow-hidden rounded-[18px] bg-surface-2 text-left ring-1 ring-white/[0.06] outline-none transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-violet ${ASPECT_CLASS[piece.aspectRatio]}`}
     >
@@ -43,6 +50,8 @@ export function WorkTile({ piece, creator, onOpen }: Props) {
         seed={piece.id}
         palette={piece.palette}
         coverUrl={piece.coverUrl}
+        videoUrl={localVideo}
+        playing={hovered}
         contentType={piece.contentType}
         durationSec={piece.durationSec}
         className="transition-transform duration-700 group-hover:scale-[1.04]"

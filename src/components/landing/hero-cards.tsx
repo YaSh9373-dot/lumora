@@ -10,9 +10,9 @@ import { CREATORS } from "@/data/creators";
 import { TOOL_MAP } from "@/data/tools";
 
 const PICKS = [
-  { creator: CREATORS[2], piece: CREATORS[2].portfolio[0], rotate: -8, x: "-58%", y: 28, depth: 18, z: 1 },
+  { creator: CREATORS[1], piece: CREATORS[1].portfolio[0], rotate: -8, x: "-58%", y: 28, depth: 18, z: 1 },
   { creator: CREATORS[0], piece: CREATORS[0].portfolio[1], rotate: 0, x: "0%", y: 0, depth: 30, z: 3 },
-  { creator: CREATORS[3], piece: CREATORS[3].portfolio[0], rotate: 8, x: "58%", y: 32, depth: 14, z: 2 },
+  { creator: CREATORS[5], piece: CREATORS[5].portfolio[0], rotate: 8, x: "58%", y: 32, depth: 14, z: 2 },
 ];
 
 /** Delay between each card's flip, so they turn over one after another. */
@@ -108,7 +108,15 @@ function Card({
             {/* Front: the finished piece */}
             <div style={face} className="card-surface overflow-hidden rounded-[22px] p-1.5 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)]">
               <div className="relative aspect-[4/5] overflow-hidden rounded-[16px]">
-                <AuroraCover seed={piece.id} palette={piece.palette} contentType={piece.contentType} durationSec={piece.durationSec} title={piece.title} />
+                <AuroraCover
+                  seed={piece.id}
+                  palette={piece.palette}
+                  contentType={piece.contentType}
+                  durationSec={piece.durationSec}
+                  title={piece.title}
+                  coverUrl={piece.coverUrl}
+                  videoUrl={piece.mediaUrl?.startsWith("/media/") ? piece.mediaUrl : undefined}
+                />
                 {center && (
                   <div className="absolute top-2.5 right-2.5 rounded-full bg-black/45 p-0.5 backdrop-blur-md">
                     <ScoreRing value={94} size={40} label="Match" />
