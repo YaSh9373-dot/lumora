@@ -14,26 +14,23 @@ export function NoiseOverlay() {
   );
 }
 
-/** A light segment orbiting the card border. Parent must be `relative` with rounded corners. */
-export function BorderBeam({ duration = 8, size = 120 }: { duration?: number; size?: number }) {
+/** A light segment orbiting the card border. Parent must be `relative overflow-hidden` with rounded corners. */
+export function BorderBeam({ duration = 8 }: { duration?: number }) {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 rounded-[inherit] [mask-composite:intersect] [-webkit-mask-composite:source-in]"
+      className="pointer-events-none absolute inset-0 rounded-[inherit] p-px"
       style={{
-        border: "1px solid transparent",
-        WebkitMask: "linear-gradient(transparent, transparent), linear-gradient(#000, #000)",
-        mask: "linear-gradient(transparent, transparent), linear-gradient(#000, #000)",
-        WebkitMaskClip: "padding-box, border-box",
-        maskClip: "padding-box, border-box",
+        WebkitMask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+        WebkitMaskComposite: "xor",
+        maskComposite: "exclude",
       }}
     >
       <div
-        className="absolute aspect-square bg-gradient-to-l from-[#FFB45C] via-[#FF5CAA] to-transparent"
+        className="absolute top-1/2 left-1/2 aspect-square w-[200%] -translate-x-1/2 -translate-y-1/2"
         style={{
-          width: size,
-          offsetPath: `rect(0 auto auto 0 round ${size}px)`,
-          animation: `beam ${duration}s linear infinite`,
+          background: "conic-gradient(from 0deg, transparent 0deg, transparent 290deg, #7C5CFF 320deg, #FF5CAA 345deg, #FFB45C 360deg)",
+          animation: `spin ${duration}s linear infinite`,
         }}
       />
     </div>

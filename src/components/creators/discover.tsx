@@ -162,7 +162,7 @@ export function Discover() {
 
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <FilterBar filters={state.filters} facets={facets} onChange={setFilters} />
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex shrink-0 flex-wrap items-center gap-2 lg:flex-nowrap">
           <select
             aria-label="Match for brief"
             className={cn(selectClass, "max-w-[220px]")}

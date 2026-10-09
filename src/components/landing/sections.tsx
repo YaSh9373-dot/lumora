@@ -199,7 +199,7 @@ export function BriefTeaser() {
 
   return (
     <div ref={ref} className="card-surface relative overflow-hidden rounded-[28px] p-6 sm:p-10">
-      <BorderBeam duration={9} size={160} />
+      <BorderBeam duration={9} />
       <div className="bg-aurora pointer-events-none absolute -top-32 -right-24 size-80 rounded-full opacity-15 blur-3xl" />
       <div className="relative grid gap-10 lg:grid-cols-2 lg:items-center">
         <div>

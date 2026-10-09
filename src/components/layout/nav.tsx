@@ -32,7 +32,7 @@ export function Nav() {
   const hydrated = useHydrated();
   const role = useDemoStore((s) => s.role);
   const [open, setOpen] = useState(false);
-  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const isActive = (href: string) => pathname !== "/creators/new" && (pathname === href || pathname.startsWith(`${href}/`));
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-background/60 backdrop-blur-xl">

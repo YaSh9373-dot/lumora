@@ -4,7 +4,7 @@ import { Compass, FileText, KanbanSquare, Plus, Sparkles, UserPlus, Wrench } fro
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Avatar } from "@/components/creators/bits";
-import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { TOOLS } from "@/data/tools";
 import { SKILLS } from "@/lib/constants";
 import { useAllCreators } from "@/lib/store";
@@ -52,44 +52,46 @@ export function CommandPalette() {
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen} title="Search Lumora" className="rounded-[20px]! border border-white/10 sm:max-w-xl">
-      <CommandInput placeholder="Search creators, tools, skills or pages…" />
-      <CommandList className="max-h-[60vh]">
-        <CommandEmpty>No results.</CommandEmpty>
-        <CommandGroup heading="Pages">
-          {PAGES.map((p) => (
-            <CommandItem key={p.href} value={`page ${p.label}`} onSelect={() => go(p.href)}>
-              <p.icon /> {p.label}
-            </CommandItem>
-          ))}
-        </CommandGroup>
-        <CommandGroup heading="Creators">
-          {creators.map((c) => (
-            <CommandItem
-              key={c.id}
-              value={`creator ${c.name} ${c.headline} ${c.specializations.join(" ")}`}
-              onSelect={() => go(`/creators/${c.slug}`)}
-            >
-              <Avatar creator={c} size={20} />
-              <span>{c.name}</span>
-              <span className="ml-auto truncate text-xs text-muted-foreground">{c.specializations[0]}</span>
-            </CommandItem>
-          ))}
-        </CommandGroup>
-        <CommandGroup heading="Tools">
-          {TOOLS.map((t) => (
-            <CommandItem key={t.id} value={`tool ${t.name}`} onSelect={() => go(`/creators?tools=${t.id}`)}>
-              <span className="size-2 rounded-full" style={{ background: t.color }} /> Creators using {t.name}
-            </CommandItem>
-          ))}
-        </CommandGroup>
-        <CommandGroup heading="Skills">
-          {SKILLS.map((s) => (
-            <CommandItem key={s} value={`skill ${s}`} onSelect={() => go(`/creators?skills=${encodeURIComponent(s)}`)}>
-              <Wrench /> {s}
-            </CommandItem>
-          ))}
-        </CommandGroup>
-      </CommandList>
+      <Command>
+        <CommandInput placeholder="Search creators, tools, skills or pages…" />
+        <CommandList className="max-h-[60vh]">
+          <CommandEmpty>No results.</CommandEmpty>
+          <CommandGroup heading="Pages">
+            {PAGES.map((p) => (
+              <CommandItem key={p.href} value={`page ${p.label}`} onSelect={() => go(p.href)}>
+                <p.icon /> {p.label}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          <CommandGroup heading="Creators">
+            {creators.map((c) => (
+              <CommandItem
+                key={c.id}
+                value={`creator ${c.name} ${c.headline} ${c.specializations.join(" ")}`}
+                onSelect={() => go(`/creators/${c.slug}`)}
+              >
+                <Avatar creator={c} size={20} />
+                <span>{c.name}</span>
+                <span className="ml-auto truncate text-xs text-muted-foreground">{c.specializations[0]}</span>
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          <CommandGroup heading="Tools">
+            {TOOLS.map((t) => (
+              <CommandItem key={t.id} value={`tool ${t.name}`} onSelect={() => go(`/creators?tools=${t.id}`)}>
+                <span className="size-2 rounded-full" style={{ background: t.color }} /> Creators using {t.name}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          <CommandGroup heading="Skills">
+            {SKILLS.map((s) => (
+              <CommandItem key={s} value={`skill ${s}`} onSelect={() => go(`/creators?skills=${encodeURIComponent(s)}`)}>
+                <Wrench /> {s}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
+      </Command>
     </CommandDialog>
   );
 }

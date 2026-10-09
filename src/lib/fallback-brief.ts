@@ -231,7 +231,7 @@ export function generateFallbackBrief(idea: string, today: Date = new Date()): B
       contentType: type,
       quantity: parseQuantity(t, type),
       aspectRatio: aspectFor(type, vertical, wide),
-      resolution: type === "image" || type === "graphic" ? (has(t, /print|poster|billboard/) ? "Print" : "4K") : has(t, /4k|tv|cinema/) ? "4K" : "1080p",
+      resolution: type === "image" || type === "graphic" ? (has(t, /print|poster|billboard/) ? "Print" : "4K") : has(t, /\b4k\b|\btv\b|\bcinema\b/) ? "4K" : "1080p",
       ...(timed ? { durationSec: duration ?? (vertical ? 15 : 30) } : {}),
     };
   });

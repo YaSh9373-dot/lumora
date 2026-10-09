@@ -13,6 +13,11 @@ describe("generateFallbackBrief", () => {
     expect(b.commercial.platforms).toContain("Instagram");
   });
 
+  it("picks 4K only for explicit 4K / TV / cinema, not 'cinematic'", () => {
+    expect(gen("A cinematic 15s instagram reel").deliverables[0].resolution).toBe("1080p");
+    expect(gen("A 30s TV spot in 4k").deliverables[0].resolution).toBe("4K");
+  });
+
   it("detects explicit durations", () => {
     expect(gen("A 30 second youtube film about our heritage").deliverables[0]).toMatchObject({ aspectRatio: "16:9", durationSec: 30 });
     expect(gen("15s teaser for tiktok").deliverables[0].durationSec).toBe(15);

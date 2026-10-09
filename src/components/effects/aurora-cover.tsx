@@ -38,7 +38,7 @@ export function AuroraCover({ seed, palette, title, contentType, durationSec, co
             <rect width="100%" height="100%" filter={`url(#g-${seed})`} />
           </svg>
           {title && (
-            <div className="absolute inset-0 flex items-center justify-center p-4">
+            <div className={cn("absolute inset-0 flex justify-center p-4", showBadges && timed ? "items-end pb-6" : "items-center")}>
               <span className="accent text-center text-[clamp(1rem,4vw,1.6rem)] leading-tight text-white/85 drop-shadow-[0_2px_12px_rgba(0,0,0,0.35)]">
                 {title}
               </span>
