@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDistanceToNow } from "date-fns";
-import { ArrowRight, CircleDot, KanbanSquare, MessageSquare } from "lucide-react";
+import { ArrowLeftRight, ArrowRight, Building2, CircleDot, Hourglass, KanbanSquare, MessageSquare, Palette, Zap } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -11,7 +11,7 @@ import { EmptyState } from "@/components/layout/states";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { ACTION_LABELS, allowedTransitions, STATUS_LABELS } from "@/lib/engagement";
 import { useAllBriefs, useAllCreators, useDemoStore } from "@/lib/store";
-import type { Brief, Creator, Engagement, EngagementStatus } from "@/lib/types";
+import type { Brief, Creator, Engagement, EngagementStatus, Role } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const COLUMNS: { title: string; statuses: EngagementStatus[]; dot: string }[] = [
@@ -66,27 +66,108 @@ function useResolved(filterBriefId?: string): Resolved[] {
     }));
 }
 
-function EngagementCard({ item, onOpen }: { item: Resolved; onOpen: () => void }) {
+const otherRole = (role: Role): Role => (role === "brand" ? "creator" : "brand");
+
+/** Optional/negative moves (cancel, decline, revise) don't count as "your move". */
+const SIDE_ACTIONS: EngagementStatus[] = ["declined", "cancelled", "revision_requested"];
+const nextMove = (e: Engagement, role: Role) => allowedTransitions(e, role).find((a) => !SIDE_ACTIONS.includes(a));
+
+function EngagementCard({ item, role, onOpen }: { item: Resolved; role: Role; onOpen: () => void }) {
   const { engagement: e, brief, creator } = item;
   const last = e.events.at(-1);
+  const next = nextMove(e, role);
+  const waitingOnOther = !next && nextMove(e, otherRole(role)) !== undefined;
+
   return (
     <button
       type="button"
       onClick={onOpen}
-      className="card-surface group w-full rounded-[16px] p-3.5 text-left transition-all hover:-translate-y-0.5 hover:border-border-strong"
+      className={cn(
+        "card-surface group w-full rounded-[16px] p-3.5 text-left transition-all hover:-translate-y-0.5 hover:border-border-strong",
+        next && "border-violet/45 shadow-[0_0_0_1px_rgba(124,92,255,0.2),0_12px_30px_-12px_rgba(124,92,255,0.55)]",
+      )}
     >
-      <div className="flex items-center gap-2.5">
-        {creator && <Avatar creator={creator} size={30} />}
-        <div className="min-w-0">
-          <p className="truncate text-[13px] font-medium">{creator?.name ?? "Unknown creator"}</p>
-          <p className="truncate text-[11.5px] text-muted-foreground">{brief?.title ?? "Unknown brief"}</p>
+      {role === "brand" ? (
+        <div className="flex items-center gap-2.5">
+          {creator && <Avatar creator={creator} size={30} />}
+          <div className="min-w-0">
+            <p className="truncate text-[13px] font-medium">{creator?.name ?? "Unknown creator"}</p>
+            <p className="truncate text-[11.5px] text-muted-foreground">{brief?.title ?? "Unknown brief"}</p>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="min-w-0">
+          <p className="eyebrow !text-[10px]">{brief?.brandName ?? "Brand"}</p>
+          <p className="mt-0.5 line-clamp-2 text-[13px] leading-snug font-medium">{brief?.title ?? "Unknown brief"}</p>
+          {creator && (
+            <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              <Avatar creator={creator} size={16} /> as {creator.name}
+            </p>
+          )}
+        </div>
+      )}
       <div className="mt-3 flex items-center justify-between">
         <span className={cn("rounded-full px-2 py-0.5 text-[10.5px]", STATUS_TONE[e.status])}>{STATUS_LABELS[e.status]}</span>
         {last && <span className="text-[10.5px] text-subtle">{formatDistanceToNow(new Date(last.at), { addSuffix: true })}</span>}
       </div>
+      {next ? (
+        <p className="mt-3 flex items-center gap-1.5 border-t border-white/[0.06] pt-2.5 text-[11.5px] font-medium text-violet">
+          <Zap className="size-3" /> Your move: {ACTION_LABELS[next]}
+        </p>
+      ) : waitingOnOther ? (
+        <p className="mt-3 flex items-center gap-1.5 border-t border-white/[0.06] pt-2.5 text-[11.5px] text-subtle">
+          <Hourglass className="size-3" /> Waiting on {otherRole(role)}
+        </p>
+      ) : null}
     </button>
+  );
+}
+
+const ROLE_COPY: Record<Role, { title: string; body: string; icon: typeof Building2 }> = {
+  brand: {
+    title: "You're viewing as the Brand",
+    body: "You invite creators, review submitted work, request revisions and approve delivery.",
+    icon: Building2,
+  },
+  creator: {
+    title: "You're viewing as the Creator",
+    body: "You accept or decline invites, start the work and submit it for the brand's review.",
+    icon: Palette,
+  },
+};
+
+function RoleBanner({ role, actionCount }: { role: Role; actionCount: number }) {
+  const setRole = useDemoStore((s) => s.setRole);
+  const copy = ROLE_COPY[role];
+  return (
+    <div className="card-surface mb-6 flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:p-5">
+      <span className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl", role === "brand" ? "bg-info/10 text-info" : "bg-pink/10 text-pink")}>
+        <copy.icon className="size-5" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="text-[15px] font-semibold">{copy.title}</p>
+        <p className="text-[13px] text-muted-foreground">{copy.body}</p>
+      </div>
+      <span
+        className={cn(
+          "rounded-full px-3 py-1 text-[12px] font-medium whitespace-nowrap",
+          actionCount ? "bg-violet/15 text-violet" : "bg-white/5 text-muted-foreground",
+        )}
+        aria-live="polite"
+      >
+        {actionCount ? `${actionCount} need${actionCount === 1 ? "s" : ""} your action` : "Nothing waiting on you"}
+      </span>
+      <GradientButton
+        variant="secondary"
+        size="sm"
+        onClick={() => {
+          setRole(otherRole(role));
+          toast.success(`Now viewing as ${otherRole(role) === "brand" ? "Brand" : "Creator"}`);
+        }}
+      >
+        <ArrowLeftRight /> Switch to {otherRole(role) === "brand" ? "Brand" : "Creator"}
+      </GradientButton>
+    </div>
   );
 }
 
@@ -96,6 +177,8 @@ export function EngagementBoard({ briefId }: { briefId?: string }) {
   const open = items.find((i) => i.engagement.id === openId);
   const closed = items.filter((i) => ["declined", "cancelled"].includes(i.engagement.status));
   const [showClosed, setShowClosed] = useState(false);
+  const role = useDemoStore((s) => s.role);
+  const actionCount = items.filter((i) => nextMove(i.engagement, role)).length;
 
   if (!items.length) {
     return (
@@ -113,6 +196,7 @@ export function EngagementBoard({ briefId }: { briefId?: string }) {
 
   return (
     <>
+      <RoleBanner role={role} actionCount={actionCount} />
       <div className="no-scrollbar -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-5 lg:overflow-visible">
         {COLUMNS.map((col) => {
           const colItems = items.filter((i) => col.statuses.includes(i.engagement.status));
@@ -125,7 +209,7 @@ export function EngagementBoard({ briefId }: { briefId?: string }) {
               </header>
               <div className="min-h-32 space-y-2.5 rounded-[18px] border border-white/[0.04] bg-white/[0.015] p-2">
                 {colItems.map((i) => (
-                  <EngagementCard key={i.engagement.id} item={i} onOpen={() => setOpenId(i.engagement.id)} />
+                  <EngagementCard key={i.engagement.id} item={i} role={role} onOpen={() => setOpenId(i.engagement.id)} />
                 ))}
                 {!colItems.length && <p className="px-2 py-6 text-center text-[11px] text-subtle">Nothing here</p>}
               </div>
@@ -141,7 +225,7 @@ export function EngagementBoard({ briefId }: { briefId?: string }) {
           {showClosed && (
             <div className="mt-3 grid gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
               {closed.map((i) => (
-                <EngagementCard key={i.engagement.id} item={i} onOpen={() => setOpenId(i.engagement.id)} />
+                <EngagementCard key={i.engagement.id} item={i} role={role} onOpen={() => setOpenId(i.engagement.id)} />
               ))}
             </div>
           )}
