@@ -5,6 +5,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { SAMPLE_BRIEFS } from "@/data/briefs";
 import { CREATORS } from "@/data/creators";
+import { CollabError, inviteCollaborator, respondToCollaboration, type CollabInput } from "./collaboration";
 import { createEngagement, transition, TransitionError } from "./engagement";
 import { uid } from "./format";
 import type { Brief, Creator, Engagement, EngagementStatus, Role } from "./types";
@@ -24,6 +25,10 @@ interface DemoState {
   /** Returns an error message, or null on success. */
   advance: (engagementId: string, to: EngagementStatus, note?: string, actor?: Role) => string | null;
   simulateAccept: () => string | null;
+  /** Lead creator invites another creator onto the job. Returns an error message or null. */
+  inviteCollaborator: (engagementId: string, input: CollabInput) => string | null;
+  /** An invited collaborator accepts or declines. Returns an error message or null. */
+  respondCollaboration: (engagementId: string, creatorId: string, accept: boolean) => string | null;
   toggleShortlist: (creatorId: string) => void;
   setUserCreator: (creator: Creator | null) => void;
   setRole: (role: Role) => void;
@@ -84,6 +89,24 @@ export const useDemoStore = create<DemoState>()(
         return get().advance(latest.id, "accepted", "Excited to work on this!", "creator");
       },
 
+      inviteCollaborator: (engagementId, input) => {
+        const current = get().engagements.find((e) => e.id === engagementId);
+        if (!current) return "Engagement not found";
+        const next = inviteCollaborator(current, input);
+        if (next instanceof CollabError) return next.message;
+        set((st) => ({ engagements: st.engagements.map((e) => (e.id === engagementId ? next : e)) }));
+        return null;
+      },
+
+      respondCollaboration: (engagementId, creatorId, accept) => {
+        const current = get().engagements.find((e) => e.id === engagementId);
+        if (!current) return "Engagement not found";
+        const next = respondToCollaboration(current, creatorId, accept);
+        if (next instanceof CollabError) return next.message;
+        set((st) => ({ engagements: st.engagements.map((e) => (e.id === engagementId ? next : e)) }));
+        return null;
+      },
+
       toggleShortlist: (creatorId) =>
         set((s) => ({
           shortlist: s.shortlist.includes(creatorId) ? s.shortlist.filter((id) => id !== creatorId) : [...s.shortlist, creatorId],
@@ -108,8 +131,20 @@ export const useDemoStore = create<DemoState>()(
               { at: at(48).toISOString(), actor: "creator", type: "in_progress" },
               { at: at(5).toISOString(), actor: "creator", type: "in_review", note: "First cut + 4 posters: drive.example/brew-v1" },
             ],
+            collaborators: [{ creatorId: "c8", role: "Animation", sharePct: 30, status: "accepted", invitedAt: at(66).toISOString() }],
           },
           createEngagement("eng-sample-3", neon.id, "c1", at(10)),
+          {
+            ...createEngagement("eng-sample-4", brew.id, "c5", at(60)),
+            status: "in_progress",
+            events: [
+              { at: at(60).toISOString(), actor: "brand", type: "invited" },
+              { at: at(58).toISOString(), actor: "creator", type: "accepted" },
+              { at: at(40).toISOString(), actor: "creator", type: "in_progress" },
+              { at: at(3).toISOString(), actor: "creator", type: "note", note: "Invited a collaborator for Voice & lip-sync (20%)" },
+            ],
+            collaborators: [{ creatorId: "c2", role: "Voice & lip-sync", sharePct: 20, status: "invited", invitedAt: at(3).toISOString() }],
+          },
         ];
         set((s) => ({
           engagements: [...samples.filter((x) => !s.engagements.some((e) => e.id === x.id)), ...s.engagements],

@@ -32,6 +32,7 @@ export function Nav() {
   const hydrated = useHydrated();
   const role = useDemoStore((s) => s.role);
   const [open, setOpen] = useState(false);
+  const hrefFor = (href: string) => (href === "/engagements" && hydrated ? `/engagements/${role}` : href);
   const isActive = (href: string) => pathname !== "/creators/new" && (pathname === href || pathname.startsWith(`${href}/`));
 
   return (
@@ -42,7 +43,7 @@ export function Nav() {
           {LINKS.map((l) => (
             <Link
               key={l.href}
-              href={l.href}
+              href={hrefFor(l.href)}
               className={cn(
                 "rounded-lg px-3 py-1.5 text-sm transition-colors",
                 isActive(l.href) ? "bg-white/[0.06] text-foreground" : "text-muted-foreground hover:text-foreground",
@@ -82,7 +83,7 @@ export function Nav() {
                 {LINKS.map((l) => (
                   <Link
                     key={l.href}
-                    href={l.href}
+                    href={hrefFor(l.href)}
                     onClick={() => setOpen(false)}
                     className={cn("rounded-lg px-3 py-2.5 text-base", isActive(l.href) ? "bg-white/[0.06]" : "text-muted-foreground")}
                   >

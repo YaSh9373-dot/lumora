@@ -176,11 +176,27 @@ export interface EngagementEvent {
   note?: string;
 }
 
+export type CollaboratorStatus = "invited" | "accepted" | "declined";
+
+/** Another creator the lead brings onto the same engagement. */
+export interface Collaborator {
+  creatorId: string;
+  /** What they'll do, e.g. "Sound design". */
+  role: string;
+  /** Share of the fee in percent; the lead keeps the rest. */
+  sharePct: number;
+  status: CollaboratorStatus;
+  invitedAt: string;
+}
+
 export interface Engagement {
   id: string;
   briefId: string;
+  /** The lead creator the brand invited. */
   creatorId: string;
   status: EngagementStatus;
   revisionsUsed: number;
   events: EngagementEvent[];
+  /** Optional so engagements saved before this feature still load. */
+  collaborators?: Collaborator[];
 }

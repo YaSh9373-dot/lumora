@@ -21,7 +21,8 @@ Built for the **byteXL x KampusIC** hackathon challenge, "AI Content Creator Mar
 - **AI Brief Builder**: one rough line turns into a complete brief through Gemini, with a deterministic fallback so it always works.
 - **Matching**: ranked creators per brief, each with a 0–100 score and plain-language reasons (matched / missing / notes).
 - **Verification signals and trust score**, computed from the data.
-- **Engagements**: invite → accept → start → review → revise → deliver, enforced by a pure state machine with role checks and a revision limit.
+- **Engagements** at two URLs, `/engagements/brand` (hiring pipeline) and `/engagements/creator` (my jobs): invite → accept → start → review → revise → deliver, enforced by a pure state machine with role checks and a revision limit.
+- **Creator teams**: after accepting a job, the lead creator can invite up to 3 other creators with a role and a fee share (the lead keeps at least 40%). Each collaborator accepts or declines, and the brand sees one combined engagement with the team.
 - **Join as creator**: a 4-step wizard. The new profile appears in Discover tagged "You".
 - **Demo Controls** (bottom-right): switch Brand/Creator role, simulate an acceptance, load sample engagements, reset.
 - `⌘K` / `Ctrl+K` command palette, and `/` to focus search.
@@ -86,7 +87,7 @@ The weights sum to 100: skills 25 · content type 20 · tools 15 (weighted by pr
 
 ## Testing
 
-102 Vitest tests cover filters (AND across groups, OR within groups, AND for skills, FX-converted budget, facets, URL round-trip), matching, verification thresholds, completeness gating, every allowed and forbidden engagement transition, fallback keyword rules (including gibberish input), AI-output sanitizing, the API route (success, timeout, bad JSON, HTTP error, missing key, rate limit), plus two component tests. Line coverage on `src/lib` is about 99%, and CI enforces ≥ 80%.
+108 Vitest tests cover filters (AND across groups, OR within groups, AND for skills, FX-converted budget, facets, URL round-trip), matching, verification thresholds, completeness gating, every allowed and forbidden engagement transition, creator-team rules (share limits, duplicates, max team size), fallback keyword rules (including gibberish input), AI-output sanitizing, the API route (success, timeout, bad JSON, HTTP error, missing key, rate limit), plus two component tests. Line coverage on `src/lib` is about 99%, and CI enforces ≥ 80%.
 
 ## Limitations and next steps
 

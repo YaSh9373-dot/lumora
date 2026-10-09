@@ -14,7 +14,8 @@ Lumora's model has two sides: **creators** (what they can do, and proof of it) a
 | **Brief** | What a brand needs | `objective`, `audience`, `deliverables[]`, `moods[]`, `palette[]`, `requiredSkills[]`, `preferredToolIds[]`, `commercial: CommercialRequirements`, `budget`, `deadline`, `revisionRounds` |
 | **Deliverable** | One output in a brief | `contentType`, `quantity`, `aspectRatio`, `durationSec?`, `resolution` |
 | **CommercialRequirements** | Rights the brand needs | `usageTypes[]`, `platforms[]`, `territory`, `licenseDuration`, `exclusivity`, `ownership`, `aiDisclosureRequired`, `watermarkFree`, `derivativeRights`, `commerciallySafeToolsOnly` |
-| **Engagement** | A creator working on a brief | `status`, `revisionsUsed`, `events[] {at, actor, type, note?}` |
+| **Engagement** | A creator working on a brief | `status`, `revisionsUsed`, `events[] {at, actor, type, note?}`, `collaborators[]` |
+| **Collaborator** | Another creator the lead brings onto the job | `creatorId`, `role`, `sharePct`, `status` (invited, accepted, declined) |
 
 ## Tools, skills, formats and commercial fields
 
@@ -42,6 +43,8 @@ erDiagram
   BRIEF ||--o{ ENGAGEMENT : has
   CREATOR ||--o{ ENGAGEMENT : "works on"
   ENGAGEMENT ||--|{ ENGAGEMENT_EVENT : logs
+  ENGAGEMENT ||--o{ COLLABORATOR : "team of"
+  CREATOR ||--o{ COLLABORATOR : joins
 ```
 
 ## Why it's designed this way

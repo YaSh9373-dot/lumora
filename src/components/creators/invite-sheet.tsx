@@ -40,7 +40,7 @@ export function InviteSheet({ creator, trigger }: { creator: Creator; trigger: R
                   if (invite(b.id, creator.id)) {
                     toast.success(`Invited ${creator.name}`, {
                       description: b.title,
-                      action: { label: "View", onClick: () => router.push("/engagements") },
+                      action: { label: "View", onClick: () => router.push("/engagements/brand") },
                     });
                   }
                 }}

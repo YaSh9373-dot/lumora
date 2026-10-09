@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { Building2, ChevronDown, FlaskConical, Palette, RotateCcw, Sparkles, UserCheck } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { EASE } from "@/components/effects/motion";
@@ -29,6 +30,8 @@ export function DemoControls() {
   const simulateAccept = useDemoStore((s) => s.simulateAccept);
   const loadSampleData = useDemoStore((s) => s.loadSampleData);
   const resetDemo = useDemoStore((s) => s.resetDemo);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const action = "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-[13px] text-foreground/85 transition-colors hover:bg-white/[0.06]";
 
@@ -54,6 +57,7 @@ export function DemoControls() {
                   aria-checked={role === r}
                   onClick={() => {
                     setRole(r);
+                    if (pathname.startsWith("/engagements")) router.push(`/engagements/${r}`);
                     toast.success(`Now viewing as ${label}`);
                   }}
                   className={cn(

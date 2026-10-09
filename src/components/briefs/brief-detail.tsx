@@ -114,7 +114,7 @@ function Detail({ brief }: { brief: Brief }) {
             <BriefPreview brief={brief} className="mx-auto max-w-3xl" />
           </TabsContent>
           <TabsContent value="engagements" className="pt-6">
-            <EngagementBoard briefId={brief.id} />
+            <EngagementBoard briefId={brief.id} role="brand" />
           </TabsContent>
         </Tabs>
       </Container>
